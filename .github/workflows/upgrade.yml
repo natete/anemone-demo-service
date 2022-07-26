@@ -18,6 +18,12 @@ jobs:
         id: current
         run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.parent.version}' --non-recursive exec:exec)
 
+      - name: log
+        run: echo ${{ steps.current.outputs.version }}
+
+      - name: log2
+        run: echo ${{ inputs.version }}
+
       - name: Create branch and commit
         if: ${{ steps.current.outputs.version != inputs.version}}
         run: mvn version:update-parent
