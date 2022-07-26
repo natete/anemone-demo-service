@@ -16,7 +16,7 @@ jobs:
 
       - name: Get parent version
         id: current
-        run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.parent.version  -q -DforceStdout)
+        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.parent.version}' --non-recursive exec:exec)
 
       - name: Create branch and commit
         if: ${{ steps.current.outputs.version != inputs.version}}
