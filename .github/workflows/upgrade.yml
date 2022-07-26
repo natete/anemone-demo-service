@@ -36,3 +36,4 @@ jobs:
           commit-message: Upgrade anemone-starter-parent to ${{ inputs.version }}
           delete-branch: true
           title: Upgrade anemone-starter-parent to ${{ inputs.version }}
+          body: ''
