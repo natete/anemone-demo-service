@@ -26,7 +26,7 @@ jobs:
 
       - name: Create branch and commit
         if: ${{ steps.current.outputs.version != inputs.version}}
-        run: mvn version:update-parent
+        run: mvn versions:update-parent
 
       - name: Create Pull Request
         if: ${{ steps.current.outputs.version != inputs.version}}
