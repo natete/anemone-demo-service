@@ -1,0 +1,32 @@
+name: 'Upgrade parent'
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The new version of the parent
+        required: true
+        type: string
+
+jobs:
+  upgrade-parent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get parent version
+        id: current
+        run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.parent.version  -q -DforceStdout)
+
+      - name: Create branch and commit
+        if: ${{ steps.current.outputs.version != inputs.version}}
+        run: mvn version:update-parent
+
+      - name: Create Pull Request
+        if: ${{ steps.current.outputs.version != inputs.version}}
+        uses: peter-evans/create-pull-request@v4
+        with:
+          branch: Upgrade_parent_to_${{inputs.version}}
+          commit-message: Upgrade anemone-starter-parent to ${{ inputs.version }}
+          delete-branch: true
+          title: Upgrade anemone-starter-parent to ${{ inputs.version }}
