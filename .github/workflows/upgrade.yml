@@ -33,13 +33,21 @@ jobs:
           echo ::set-output name=patch::$patch
 
       - name: log
-        run: echo ${{ steps.current.outputs.version }}
+        run: |
+          echo ${{ steps.current.outputs.version }}
+          echo ${{ steps.current.outputs.major }}
+          echo ${{ steps.current.outputs.minor }}
+          echo ${{ steps.current.outputs.patch }}
 
       - name: log2
-        run: echo ${{ inputs.version }}
+        run: |
+          echo ${{ inputs.version }}
+          echo ${{ steps.new.outputs.major }}
+          echo ${{ steps.new.outputs.minor }}
+          echo ${{ steps.new.outputs.patch }}
 
       - name: Create branch and commit
-        if: ${{ steps.current.outputs.version != inputs.version}}
+        if: ${{ steps.current.outputs.major == steps.new.outputs.major && steps.current.outputs.minor == steps.new.outputs.minor && steps.current.outputs.patch != steps.new.outputs.patch }}
         run: mvn versions:update-parent "-DparentVersion=[${{inputs.version}}]" -DgenerateBackupPoms=false
 
       - name: Create Pull Request
