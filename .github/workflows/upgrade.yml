@@ -14,9 +14,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Get new version
+        id: new
+        run: |
+          IFS=. read -r major minor patch <<< ${{inputs.version}}
+          echo ::set-output name=major::$major
+          echo ::set-output name=minor::$minor
+          echo ::set-output name=patch::$patch
+
       - name: Get parent version
         id: current
-        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.parent.version}' --non-recursive exec:exec)
+        run: |
+          version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.parent.version}' --non-recursive exec:exec)
+          IFS=. read -r major minor patch <<< $version
+          echo ::set-output name=version::$version
+          echo ::set-output name=major::$major
+          echo ::set-output name=minor::$minor
+          echo ::set-output name=patch::$patch
 
       - name: log
         run: echo ${{ steps.current.outputs.version }}
@@ -29,7 +43,7 @@ jobs:
         run: mvn versions:update-parent "-DparentVersion=[${{inputs.version}}]" -DgenerateBackupPoms=false
 
       - name: Create Pull Request
-        if: ${{ steps.current.outputs.version != inputs.version}}
+        if: ${{ steps.current.outputs.major == steps.new.outputs.major && steps.current.outputs.minor == steps.new.outputs.minor && steps.current.outputs.patch != steps.new.outputs.patch }}
         uses: peter-evans/create-pull-request@v4
         with:
           branch: Upgrade_parent_to_${{inputs.version}}
