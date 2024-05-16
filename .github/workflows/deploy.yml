@@ -8,6 +8,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  one:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
   build-and-deploy:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     uses: natete/workflows-test/.github/workflows/build.yml@main
