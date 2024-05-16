@@ -11,6 +11,6 @@ jobs:
   build-and-deploy:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     uses: natete/workflows-test/.github/workflows/build.yml@main
-      with:
-        java_version: 17
-      secrets: inherit
+    with:
+      java_version: 17
+    secrets: inherit
