@@ -9,10 +9,8 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: natete/workflows-test/.github/workflows/build.yml@main
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-        with:
-          java_version: 17
-        secrets: inherit
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    uses: natete/workflows-test/.github/workflows/build.yml@main
+      with:
+        java_version: 17
+      secrets: inherit
