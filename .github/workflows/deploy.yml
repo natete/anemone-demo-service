@@ -12,7 +12,7 @@ jobs:
     uses: natete/workflows-test/.github/workflows/build.yml@main
     with:
       java_version: 17
-      nexus_user: nexus_user
-      nexus_password: nexus_pass
+      nexus_user: "nexus_user"
+      nexus_password: "nexus_pass"
       branch: ${{ github.base_ref }}
     secrets: inherit
